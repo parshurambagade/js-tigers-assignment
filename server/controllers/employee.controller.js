@@ -21,6 +21,11 @@ export const getAllEmployees = async (req, res) => {
 export const getSingleEmployee = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Employee ID is required" });
+    }
+
     const employee = await Employee.findById(id);
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
@@ -69,7 +74,11 @@ export const updateEmployee = async (req, res) => {
   try {
     const { id } = req.params;
 
-    let employee = await Employee.findById(id);
+    if (!id) {
+      return res.status(400).json({ message: "Employee ID is required" });
+    }
+
+    const employee = await Employee.findById(id);
     if (!employee) {
       return res.status(404).json({ message: "Employee not found" });
     }
@@ -103,6 +112,28 @@ export const updateEmployee = async (req, res) => {
     res
       .status(200)
       .json({ data: employee, message: "Employee updated successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error: " + error.message });
+  }
+};
+
+export const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Employee ID is required" });
+    }
+
+    const employee = await Employee.findByIdAndDelete(id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+    res
+      .status(200)
+      .json({ data: employee, message: "Employee deleted successfully" });
   } catch (error) {
     res
       .status(500)
