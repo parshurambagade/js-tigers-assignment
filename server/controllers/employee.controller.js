@@ -2,12 +2,22 @@ import { validDepartments } from "../constants.js";
 import Employee from "../models/employee.model.js";
 import { generateEmployeeId } from "../utils/employee.util.js";
 
-export const getAllEmployees = async (req, res) => {
+export const getEmployees = async (req, res) => {
   try {
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit) : 25;
+    const { page = 1, limit = 25, name, department } = req.query;
     const skip = (page - 1) * limit;
-    const employees = await Employee.find().limit(limit).skip(skip);
+
+    const filter = {};
+
+    if (name) {
+      filter.name = { $regex: name, $options: "i" };
+    }
+
+    if (department && validDepartments[department]) {
+      filter.department = department;
+    }
+
+    const employees = await Employee.find(filter).limit(limit).skip(skip);
     res
       .status(200)
       .json({ data: employees, message: "Employees fetched successfully" });

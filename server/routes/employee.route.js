@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   addEmployee,
   deleteEmployee,
-  getAllEmployees,
+  getEmployees,
   getSingleEmployee,
   updateEmployee,
 } from "../controllers/employee.controller.js";
@@ -13,7 +13,7 @@ import {
 
 const employeeRouter = Router();
 
-employeeRouter.get("/all", getAllEmployees);
+employeeRouter.get("/all", getEmployees);
 employeeRouter.get("/:id", getSingleEmployee);
 employeeRouter.post("/add", validateAddEmployeeData, addEmployee);
 employeeRouter.put("/update/:id", validateUpdateEmployeeData, updateEmployee);
