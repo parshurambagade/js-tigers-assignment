@@ -18,9 +18,14 @@ export const getEmployees = async (req, res) => {
     }
 
     const employees = await Employee.find(filter).limit(limit).skip(skip);
-    res
-      .status(200)
-      .json({ data: employees, message: "Employees fetched successfully" });
+    const total = await Employee.countDocuments(filter);
+    res.status(200).json({
+      data: employees,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+      message: "Employees fetched successfully",
+    });
   } catch (error) {
     res
       .status(500)
