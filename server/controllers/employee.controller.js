@@ -1,3 +1,4 @@
+import { validDepartments } from "../constants.js";
 import Employee from "../models/employee.model.js";
 import { generateEmployeeId } from "../utils/employee.util.js";
 
@@ -57,6 +58,51 @@ export const addEmployee = async (req, res) => {
     res
       .status(201)
       .json({ data: newEmployee, message: "Employee created successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error: " + error.message });
+  }
+};
+
+export const updateEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    let employee = await Employee.findById(id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    const updates = Object.keys(req.body);
+
+    if (req.body.designation && !req.body.department) {
+      if (
+        !validDepartments[employee.department].includes(req.body.designation)
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Invalid designation for department" });
+      }
+    }
+
+    if (req.body.department && !req.body.designation) {
+      if (req.body.department !== employee.department) {
+        return res.status(400).json({
+          error: "Designation is required for the selected department",
+        });
+      }
+    }
+
+    updates.forEach((update) => {
+      employee[update] = req.body[update];
+    });
+
+    await employee.save();
+
+    res
+      .status(200)
+      .json({ data: employee, message: "Employee updated successfully" });
   } catch (error) {
     res
       .status(500)

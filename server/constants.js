@@ -18,3 +18,10 @@ export const validDepartments = {
     "Logistics Coordinator",
   ],
 };
+
+export const allowedUpdates = [
+  "name",
+  "department",
+  "designation",
+  "joiningDate",
+];
