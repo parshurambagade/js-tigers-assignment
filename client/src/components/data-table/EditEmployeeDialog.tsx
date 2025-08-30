@@ -1,16 +1,20 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { IconButton, InputLabel, MenuItem, Select } from "@mui/material";
+import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import EditEmployeeForm from "./EditEmployeeForm";
+import type { Employee } from "../../types/employee";
 
-export default function EditEmployeeDialog() {
+export default function EditEmployeeDialog({
+  employee,
+}: {
+  employee: Employee;
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -32,7 +36,7 @@ export default function EditEmployeeDialog() {
           <DialogContentText>
             Review and modify employee details. Employee ID cannot be changed.
           </DialogContentText>
-          <EditEmployeeForm handleClose={handleClose} />
+          <EditEmployeeForm employee={employee} handleClose={handleClose} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="error">
