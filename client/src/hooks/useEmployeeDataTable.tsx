@@ -1,15 +1,7 @@
 import type { GridRowModel, GridRowsProp } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import { API_ENDPOINT, EMPLOYEE_COLUMNS } from "../constants";
-
-interface Employee {
-  _id?: string;
-  employeeId: string;
-  name: string;
-  department: string;
-  designation: string;
-  joiningDate: string;
-}
+import type { Employee } from "../types/employee";
 
 export default function useEmployeeDataTable() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -32,17 +24,6 @@ export default function useEmployeeDataTable() {
     },
     []
   );
-
-  const processRowUpdate = (newRow: GridRowModel) => {
-    console.log("Updated Row: ", newRow);
-    // TODO: add API call to update employee data in the backend
-
-    const updatedRows = tableRows.map((row) =>
-      row.id === newRow.id ? newRow : row
-    );
-    setTableRows(updatedRows);
-    return newRow;
-  };
 
   const onPaginationModelChange = (newModel: {
     page: number;
@@ -79,7 +60,6 @@ export default function useEmployeeDataTable() {
     page,
     tableRows,
     totalRows,
-    processRowUpdate,
     columns: EMPLOYEE_COLUMNS,
     onPaginationModelChange,
   };
